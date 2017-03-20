@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "56960040704",
+    "firebase_url": "https://development-7aea6.firebaseio.com",
+    "project_id": "development-7aea6",
+    "storage_bucket": "development-7aea6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56960040704:android:8a9d684b823d526a",
+        "android_client_info": {
+          "package_name": "com.ar.simpleabsensi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56960040704-oc6v9cinq9e3ns1d9p4m4u0nfhn7su0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARJoVFrPuwqolsJw1klrly5ImymTysqrg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56960040704:android:ff8847597c177227",
+        "android_client_info": {
+          "package_name": "com.radyalabs.todolistusefrd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56960040704-oc6v9cinq9e3ns1d9p4m4u0nfhn7su0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARJoVFrPuwqolsJw1klrly5ImymTysqrg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
