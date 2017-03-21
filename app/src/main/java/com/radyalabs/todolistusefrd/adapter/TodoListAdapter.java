@@ -25,6 +25,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
     private LayoutInflater inflater;
     private Context context;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private AdapterView.OnItemLongClickListener onItemLongClickListener;
 
     public TodoListAdapter(Context context) {
         this.context = context;
@@ -34,6 +35,10 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
 
     public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
     }
 
     public ArrayList<Todo> getData() {
@@ -57,14 +62,28 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
         final long identity = System.currentTimeMillis();
         holder.identity = identity;
 
-        holder.todoItem.setText(todo.item);
-
-        holder.doneTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)context).deleteTodo(todo.id);
+        if (holder.identity == identity){
+            if (todo.is_done){
+                holder.doneTodo.setImageResource(R.drawable.done);
+            }else {
+                holder.doneTodo.setImageResource(R.drawable.not_done);
             }
-        });
+
+            holder.todoItem.setText(todo.item);
+
+            holder.doneTodo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (todo.is_done){
+                        ((MainActivity)context).setDone(todo.id, false);
+                    }else {
+                        ((MainActivity)context).setDone(todo.id, true);
+                    }
+
+                }
+            });
+        }
 
     }
 
@@ -73,7 +92,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
         return data.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, AdapterView.OnLongClickListener{
         int position;
         long identity;
 
@@ -83,6 +102,8 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
         public MyViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+
             ButterKnife.bind(this, itemView);
 
         }
@@ -92,6 +113,15 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
             if (onItemClickListener != null){
                 onItemClickListener.onItemClick(null, v, position, 0);
             }
+        }
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (onItemLongClickListener != null){
+                onItemLongClickListener.onItemLongClick(null, v, position, 0);
+            }
+            return false;
         }
     }
 }

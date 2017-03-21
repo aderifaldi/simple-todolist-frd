@@ -8,8 +8,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:padding="16dp"
-        android:src="@drawable/done"
-        android:textColor="@color/colorPrimary"
+        android:src="@drawable/not_done"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
 
@@ -18,8 +17,9 @@
         android:layout_toLeftOf="@id/doneTodo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
         android:text="Todo"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:padding="16dp"
         android:layout_centerVertical="true" />
 

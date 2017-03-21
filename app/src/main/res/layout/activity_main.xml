@@ -15,14 +15,13 @@
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
 
-        <TextView
+        <ImageView
             android:id="@+id/addTodo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:padding="16dp"
             android:text="Add"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorWhite"
+            android:src="@drawable/add"
             android:background="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
@@ -33,8 +32,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorAccent"
+            android:textSize="17sp"
             android:inputType="textShortMessage"
-            android:hint="Write Todo Here..."
+            android:hint="Write todo here"
             android:background="@color/colorWhite"/>
 
     </RelativeLayout>
@@ -46,19 +49,33 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimary"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/listTodo"
+    <RelativeLayout
         android:layout_above="@id/line"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"/>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listTodo"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"/>
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:visibility="gone"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_centerInParent="true"/>
+        <ProgressBar
+            android:id="@+id/loading"
+            android:visibility="gone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/txtEmptyInfo"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorAccent"
+            android:text="There is no todo"/>
+    </RelativeLayout>
 
 </RelativeLayout>

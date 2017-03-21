@@ -6,8 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,10 +29,14 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TABLE_TODOS = "todos";
+    private static final String APP_TITLE = "app_title";
+    private static final String IS_DONE = "is_done";
 
     @BindView(R.id.listTodo) RecyclerView listTodo;
     @BindView(R.id.edtTodo) EditText edtTodo;
     @BindView(R.id.loading) ProgressBar loading;
+    @BindView(R.id.txtEmptyInfo) TextView txtEmptyInfo;
 
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
@@ -45,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        loading.setVisibility(View.VISIBLE);
-
         adapter = new TodoListAdapter(this);
         linearLayoutManager = new LinearLayoutManager(this);
 
@@ -55,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
         listTodo.addItemDecoration(new SimpleDividerItemDecoration(this));
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference("todos");
 
-        mFirebaseInstance.getReference("app_title").addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase = mFirebaseInstance.getReference(TABLE_TODOS);
+        mFirebaseDatabase.keepSynced(true);
+
+        mFirebaseInstance.getReference(APP_TITLE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e(TAG, "App title updated");
@@ -72,12 +79,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        loading.setVisibility(View.VISIBLE);
         loadTodoList();
+
+        adapter.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Todo todo = adapter.getData().get(position);
+                mFirebaseDatabase.child(todo.id).setValue(null);
+
+                return true;
+            }
+        });
 
     }
 
-    public void deleteTodo(String id){
-        mFirebaseDatabase.child(id).setValue(null);
+    public void setDone(String id, boolean isDone){
+        mFirebaseDatabase.child(id).child(IS_DONE).setValue(isDone);
     }
 
     private void loadTodoList(){
@@ -85,18 +104,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 loading.setVisibility(View.VISIBLE);
-
                 adapter.getData().clear();
-                for (DataSnapshot data : dataSnapshot.getChildren()){
 
-                    Todo todo = data.getValue(Todo.class);
-                    adapter.getData().add(todo);
-                    adapter.notifyItemInserted(adapter.getData().size() - 1);
+                if (dataSnapshot.getChildrenCount() != 0){
+                    txtEmptyInfo.setVisibility(View.GONE);
 
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        Todo todo = data.getValue(Todo.class);
+                        adapter.getData().add(todo);
+                        adapter.notifyItemInserted(adapter.getData().size() - 1);
+                    }
+                    adapter.notifyDataSetChanged();
+
+                }else {
+                    txtEmptyInfo.setVisibility(View.VISIBLE);
                 }
 
-                adapter.notifyDataSetChanged();
                 loading.setVisibility(View.GONE);
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -115,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
         if (todoItem == "" || todoItem.equals("")){
             edtTodo.setError("Couldn't add empty todo!");
         }else {
-            insertTodo(todoId, todoItem);
+            insertTodo(todoId, todoItem, false);
         }
 
     }
 
-    private void insertTodo(String todoId, String todoItem){
-        Todo todo = new Todo(todoId, todoItem);
+    private void insertTodo(String todoId, String todoItem, boolean isDone){
+        Todo todo = new Todo(todoId, todoItem, isDone);
         mFirebaseDatabase.child(todoId).setValue(todo);
         edtTodo.setText("");
     }
