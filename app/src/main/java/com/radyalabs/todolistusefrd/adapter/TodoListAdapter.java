@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.radyalabs.todolistusefrd.R;
@@ -77,7 +78,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.MyView
         long identity;
 
         @BindView(R.id.todoItem) TextView todoItem;
-        @BindView(R.id.doneTodo) TextView doneTodo;
+        @BindView(R.id.doneTodo) ImageView doneTodo;
 
         public MyViewHolder(View itemView) {
             super(itemView);

@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.listTodo) RecyclerView listTodo;
     @BindView(R.id.edtTodo) EditText edtTodo;
+    @BindView(R.id.loading) ProgressBar loading;
 
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        loading.setVisibility(View.VISIBLE);
 
         adapter = new TodoListAdapter(this);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -73,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteTodo(String id){
         mFirebaseDatabase.child(id).setValue(null);
-
     }
 
     private void loadTodoList(){
         mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                loading.setVisibility(View.VISIBLE);
 
                 adapter.getData().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()){
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
+                loading.setVisibility(View.GONE);
 
             }
 

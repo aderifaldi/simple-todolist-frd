@@ -23,7 +23,7 @@
             android:text="Add"
             android:gravity="center_vertical"
             android:textColor="@color/colorWhite"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
 
@@ -44,7 +44,7 @@
         android:layout_above="@id/containerAddTodo"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorAccent"/>
+        android:background="@color/colorPrimary"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listTodo"
@@ -53,5 +53,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"/>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:visibility="gone"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
