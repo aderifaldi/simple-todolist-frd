@@ -1,16 +1,19 @@
 package com.radyalabs.todolistusefrd.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +27,6 @@ import com.radyalabs.todolistusefrd.model.Todo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -130,22 +132,36 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        edtTodo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean handled = false;
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edtTodo.getWindowToken(), 0);
+
+                    todoId = mFirebaseDatabase.push().getKey();
+                    todoItem = edtTodo.getText().toString();
+
+                    if (todoItem == "" || todoItem.equals("")){
+                        edtTodo.setError("Couldn't add empty todo!");
+                    }else {
+                        addTodo(todoId, todoItem, false);
+                    }
+
+                    handled = true;
+                }
+
+                return handled;
+            }
+        });
     }
 
-    @OnClick(R.id.addTodo)
-    public void addTodo() {
-        todoId = mFirebaseDatabase.push().getKey();
-        todoItem = edtTodo.getText().toString();
-
-        if (todoItem == "" || todoItem.equals("")){
-            edtTodo.setError("Couldn't add empty todo!");
-        }else {
-            insertTodo(todoId, todoItem, false);
-        }
-
-    }
-
-    private void insertTodo(String todoId, String todoItem, boolean isDone){
+    private void addTodo(String todoId, String todoItem, boolean isDone){
         Todo todo = new Todo(todoId, todoItem, isDone);
         mFirebaseDatabase.child(todoId).setValue(todo);
         edtTodo.setText("");
