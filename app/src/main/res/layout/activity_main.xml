@@ -25,7 +25,7 @@
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorAccent"
             android:textSize="17sp"
-            android:inputType="textShortMessage"
+            android:inputType="text"
             android:hint="Write todo here"
             android:background="@color/colorWhite"/>
 

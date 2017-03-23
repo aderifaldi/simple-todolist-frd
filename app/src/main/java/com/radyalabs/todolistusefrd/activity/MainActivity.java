@@ -81,6 +81,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        edtTodo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean handled = false;
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edtTodo.getWindowToken(), 0);
+
+                    todoId = mFirebaseDatabase.push().getKey();
+                    todoItem = edtTodo.getText().toString();
+
+                    if (todoItem == "" || todoItem.equals("")){
+                        edtTodo.setError("Couldn't add empty todo!");
+                    }else {
+                        addTodo(todoId, todoItem, false);
+                    }
+
+                    handled = true;
+                }
+
+                return handled;
+            }
+        });
+
         loading.setVisibility(View.VISIBLE);
         loadTodoList();
 
@@ -130,33 +157,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
-        edtTodo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-                boolean handled = false;
-
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(edtTodo.getWindowToken(), 0);
-
-                    todoId = mFirebaseDatabase.push().getKey();
-                    todoItem = edtTodo.getText().toString();
-
-                    if (todoItem == "" || todoItem.equals("")){
-                        edtTodo.setError("Couldn't add empty todo!");
-                    }else {
-                        addTodo(todoId, todoItem, false);
-                    }
-
-                    handled = true;
-                }
-
-                return handled;
             }
         });
     }
